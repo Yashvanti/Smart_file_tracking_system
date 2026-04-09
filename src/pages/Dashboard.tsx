@@ -10,6 +10,7 @@ import {
 import { useFiles } from '../hooks/useFiles';
 import DashboardCharts from '../components/DashboardCharts';
 import { motion } from 'motion/react';
+import SEO from '../components/SEO';
 
 export default function Dashboard() {
   const { files } = useFiles();
@@ -25,6 +26,10 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-8">
+      <SEO 
+        title="Dashboard"
+        description="Overview of file movements, statistics, and departmental analytics."
+      />
       <div className="flex flex-col gap-1">
         <h1 className="text-3xl font-black text-gray-900 tracking-tight">Dashboard Overview</h1>
         <p className="text-gray-500 font-medium">Real-time monitoring of file movements across departments.</p>

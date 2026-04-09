@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 import { cn } from '../lib/utils';
 
 import { useAuth } from '../hooks/useAuth';
+import SEO from '../components/SEO';
 
 export default function Home() {
   const { isAuthenticated } = useAuth();
@@ -42,6 +43,11 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#FFFDF6]">
+      <SEO 
+        title="Home"
+        description="Smart File Movement Tracking System for engineering departments. Track physical files in real-time using QR codes."
+        keywords="file tracking, QR tracking, engineering management, document tracking"
+      />
       {!isAuthenticated && (
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-between">
           <div className="flex items-center gap-3">

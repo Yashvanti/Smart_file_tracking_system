@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Lock, User, Eye, EyeOff, FileText } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { Navigate } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 export default function Login() {
   const { isAuthenticated, login } = useAuth();
@@ -26,6 +27,10 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-[#FFFDF6] flex items-center justify-center p-4 overflow-hidden relative">
+      <SEO 
+        title="Admin Login"
+        description="Secure portal for administrators to manage and track file movements."
+      />
       {/* Background Elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-yellow-400/10 rounded-full blur-[120px]" />
