@@ -36,12 +36,19 @@ const menuItems = [
 
 export default function Sidebar({ isOpen, setIsOpen, onLogout }: SidebarProps) {
   const location = useLocation();
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth < 1024);
+
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <>
       {/* Mobile Overlay */}
       <AnimatePresence>
-        {isOpen && (
+        {isOpen && isMobile && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -55,10 +62,13 @@ export default function Sidebar({ isOpen, setIsOpen, onLogout }: SidebarProps) {
       {/* Sidebar */}
       <motion.aside
         initial={false}
-        animate={{ x: isOpen ? 0 : -300 }}
+        animate={{ 
+          x: (isMobile && !isOpen) ? -300 : 0,
+          width: (!isMobile) ? (isOpen ? 256 : 80) : 256
+        }}
         className={cn(
-          "fixed top-0 left-0 h-full w-64 bg-black text-white z-50 transition-all duration-300 ease-in-out lg:translate-x-0",
-          !isOpen && "lg:w-20"
+          "fixed top-0 left-0 h-full bg-black text-white z-50 transition-all duration-300 ease-in-out",
+          !isMobile && !isOpen ? "w-20" : "w-64"
         )}
       >
         <div className="flex flex-col h-full">
@@ -71,8 +81,8 @@ export default function Sidebar({ isOpen, setIsOpen, onLogout }: SidebarProps) {
               <motion.span 
                 initial={false}
                 animate={{ 
-                  opacity: (isOpen || window.innerWidth < 1024) ? 1 : 0,
-                  width: (isOpen || window.innerWidth < 1024) ? 'auto' : 0 
+                  opacity: (isOpen || isMobile) ? 1 : 0,
+                  width: (isOpen || isMobile) ? 'auto' : 0 
                 }}
                 className="font-bold text-lg tracking-tight overflow-hidden whitespace-nowrap"
               >
@@ -93,7 +103,7 @@ export default function Sidebar({ isOpen, setIsOpen, onLogout }: SidebarProps) {
               <Link
                 key={item.path}
                 to={item.path}
-                onClick={() => window.innerWidth < 1024 && setIsOpen(false)}
+                onClick={() => isMobile && setIsOpen(false)}
                 className={cn(
                   "flex items-center gap-4 px-4 py-3 rounded-xl transition-all group relative",
                   location.pathname === item.path 
