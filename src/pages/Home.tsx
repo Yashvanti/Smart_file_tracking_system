@@ -42,13 +42,26 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FFFDF6]">
+    <div className="min-h-screen bg-[#FFFDF6] relative overflow-hidden">
       <SEO 
         title="Home"
         description="Smart File Movement Tracking System for engineering departments. Track physical files in real-time using QR codes."
         keywords="file tracking, QR tracking, engineering management, document tracking"
       />
-      {!isAuthenticated && (
+      
+      {/* Background Image with Overlay */}
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <img 
+          src="https://images.unsplash.com/photo-1568667256549-094345857637?auto=format&fit=crop&q=80&w=2000" 
+          alt="Thematic Background" 
+          className="w-full h-full object-cover opacity-[0.25]"
+          referrerPolicy="no-referrer"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#FFFDF6]/40 via-[#FFFDF6]/10 to-[#FFFDF6]" />
+      </div>
+
+      <div className="relative z-10">
+        {!isAuthenticated && (
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="bg-yellow-400 p-2 rounded-lg shadow-sm">
@@ -157,5 +170,6 @@ export default function Home() {
         </section>
       </div>
     </div>
+  </div>
   );
 }
