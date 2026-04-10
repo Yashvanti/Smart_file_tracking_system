@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
   Files, 
   Clock, 
@@ -12,18 +12,63 @@ import DashboardCharts from '../components/DashboardCharts';
 import FileStatusList from '../components/FileStatusList';
 import { motion } from 'motion/react';
 import SEO from '../components/SEO';
+import { cn } from '../lib/utils';
 
 export default function Dashboard() {
   const { files } = useFiles();
+  const [activeFilter, setActiveFilter] = useState('Total Files');
+
+  const today = new Date().toISOString().split('T')[0];
 
   const stats = [
-    { label: 'Total Files', value: files.length, icon: Files, color: 'bg-black text-white' },
-    { label: 'In Progress', value: files.filter(f => f.status === 'Sent' || f.status === 'Received').length, icon: Timer, color: 'bg-yellow-400 text-black' },
-    { label: 'Pending', value: files.filter(f => f.status === 'In Review').length, icon: Clock, color: 'bg-blue-500 text-white' },
-    { label: 'Completed', value: files.filter(f => f.status === 'Approved').length, icon: CheckCircle2, color: 'bg-green-500 text-white' },
-    { label: 'Delayed', value: files.filter(f => f.status === 'Rejected').length, icon: AlertCircle, color: 'bg-red-500 text-white' },
-    { label: 'Scanned Today', value: files.filter(f => f.updatedAt.startsWith(new Date().toISOString().split('T')[0])).length, icon: QrCode, color: 'bg-purple-500 text-white' },
+    { 
+      label: 'Total Files', 
+      value: files.length, 
+      icon: Files, 
+      color: 'bg-black text-white',
+      filterFn: (f: any) => true 
+    },
+    { 
+      label: 'Pending Files', 
+      value: files.filter(f => f.status === 'In Review' || f.status === 'Created').length, 
+      icon: Clock, 
+      color: 'bg-blue-500 text-white',
+      filterFn: (f: any) => f.status === 'In Review' || f.status === 'Created'
+    },
+    { 
+      label: 'In Progress', 
+      value: files.filter(f => f.status === 'Sent' || f.status === 'Received').length, 
+      icon: Timer, 
+      color: 'bg-yellow-400 text-black',
+      filterFn: (f: any) => f.status === 'Sent' || f.status === 'Received'
+    },
+    { 
+      label: 'Completed Files', 
+      value: files.filter(f => f.status === 'Approved').length, 
+      icon: CheckCircle2, 
+      color: 'bg-green-500 text-white',
+      filterFn: (f: any) => f.status === 'Approved'
+    },
+    { 
+      label: 'Delayed Files', 
+      value: files.filter(f => f.status === 'Rejected').length, 
+      icon: AlertCircle, 
+      color: 'bg-red-500 text-white',
+      filterFn: (f: any) => f.status === 'Rejected'
+    },
+    { 
+      label: 'Scanned Today', 
+      value: files.filter(f => f.updatedAt.startsWith(today)).length, 
+      icon: QrCode, 
+      color: 'bg-purple-500 text-white',
+      filterFn: (f: any) => f.updatedAt.startsWith(today)
+    },
   ];
+
+  const filteredFiles = useMemo(() => {
+    const stat = stats.find(s => s.label === activeFilter);
+    return stat ? files.filter(stat.filterFn) : files;
+  }, [files, activeFilter]);
 
   return (
     <div className="space-y-8">
@@ -44,7 +89,13 @@ export default function Dashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.1 }}
-            className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col gap-4 group hover:shadow-md transition-all"
+            onClick={() => setActiveFilter(stat.label)}
+            className={cn(
+              "p-6 rounded-3xl shadow-sm border flex flex-col gap-4 group cursor-pointer transition-all",
+              activeFilter === stat.label 
+                ? "bg-white border-yellow-400 ring-2 ring-yellow-400/20 shadow-lg" 
+                : "bg-white border-gray-100 hover:shadow-md"
+            )}
           >
             <div className={`${stat.color} w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-current/10 group-hover:scale-110 transition-transform`}>
               <stat.icon className="w-5 h-5" />
@@ -66,7 +117,10 @@ export default function Dashboard() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
       >
-        <FileStatusList files={files} />
+        <FileStatusList 
+          files={filteredFiles} 
+          title={`File Inventory: ${activeFilter}`}
+        />
       </motion.div>
     </div>
   );

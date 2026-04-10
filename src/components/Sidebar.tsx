@@ -8,6 +8,7 @@ import {
   QrCode, 
   History, 
   LogOut, 
+  LogIn,
   X,
   Menu,
   FileText,
@@ -16,6 +17,7 @@ import {
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '../lib/utils';
+import { useAuth } from '../hooks/useAuth';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -23,20 +25,25 @@ interface SidebarProps {
   onLogout: () => void;
 }
 
-const menuItems = [
-  { icon: HomeIcon, label: 'Home', path: '/' },
-  { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
-  { icon: PlusCircle, label: 'Add File', path: '/add-file' },
-  { icon: Search, label: 'Track File', path: '/track-file' },
-  { icon: QrCode, label: 'Scan QR', path: '/scan-qr' },
-  { icon: History, label: 'File History', path: '/history' },
-  { icon: User, label: 'Profile', path: '/profile' },
-  { icon: Bell, label: 'Notifications', path: '/notifications' },
-];
-
 export default function Sidebar({ isOpen, setIsOpen, onLogout }: SidebarProps) {
   const location = useLocation();
+  const { isAuthenticated } = useAuth();
   const [isMobile, setIsMobile] = React.useState(window.innerWidth < 1024);
+
+  const menuItems = [
+    { icon: HomeIcon, label: 'Home', path: '/' },
+    ...(isAuthenticated ? [
+      { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
+      { icon: PlusCircle, label: 'Add File', path: '/add-file' },
+      { icon: Search, label: 'Track File', path: '/track-file' },
+      { icon: QrCode, label: 'Scan QR', path: '/scan-qr' },
+      { icon: History, label: 'File History', path: '/history' },
+      { icon: User, label: 'Profile', path: '/profile' },
+      { icon: Bell, label: 'Notifications', path: '/notifications' },
+    ] : [
+      { icon: LogIn, label: 'Login', path: '/login' },
+    ]),
+  ];
 
   React.useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
@@ -130,26 +137,28 @@ export default function Sidebar({ isOpen, setIsOpen, onLogout }: SidebarProps) {
           </nav>
 
           {/* Logout */}
-          <div className="p-4 border-t border-white/10">
-            <button
-              onClick={onLogout}
-              className="flex items-center gap-4 px-4 py-3 w-full rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-500 transition-all group relative"
-            >
-              <LogOut className="w-5 h-5 shrink-0" />
-              <span className={cn(
-                "transition-all duration-300 overflow-hidden whitespace-nowrap",
-                !isOpen && "lg:opacity-0 lg:w-0",
-                isOpen && "opacity-100 w-auto"
-              )}>
-                Logout
-              </span>
-              {!isOpen && (
-                <div className="absolute left-full ml-6 px-2 py-1 bg-red-500 text-white text-xs font-bold rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity hidden lg:block z-50">
+          {isAuthenticated && (
+            <div className="p-4 border-t border-white/10">
+              <button
+                onClick={onLogout}
+                className="flex items-center gap-4 px-4 py-3 w-full rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-500 transition-all group relative"
+              >
+                <LogOut className="w-5 h-5 shrink-0" />
+                <span className={cn(
+                  "transition-all duration-300 overflow-hidden whitespace-nowrap",
+                  !isOpen && "lg:opacity-0 lg:w-0",
+                  isOpen && "opacity-100 w-auto"
+                )}>
                   Logout
-                </div>
-              )}
-            </button>
-          </div>
+                </span>
+                {!isOpen && (
+                  <div className="absolute left-full ml-6 px-2 py-1 bg-red-500 text-white text-xs font-bold rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity hidden lg:block z-50">
+                    Logout
+                  </div>
+                )}
+              </button>
+            </div>
+          )}
         </div>
       </motion.aside>
     </>

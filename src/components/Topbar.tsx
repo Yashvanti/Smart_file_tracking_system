@@ -1,8 +1,9 @@
 import React from 'react';
-import { Bell, Search, User, Menu } from 'lucide-react';
+import { Bell, Search, User, Menu, LogIn } from 'lucide-react';
 import { useDateTime } from '../hooks/useDateTime';
 import { formatDate, formatTime } from '../lib/utils';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
 interface TopbarProps {
   onMenuClick: () => void;
@@ -11,6 +12,7 @@ interface TopbarProps {
 
 export default function Topbar({ onMenuClick, user }: TopbarProps) {
   const dateTime = useDateTime();
+  const { isAuthenticated } = useAuth();
 
   return (
     <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-bottom border-gray-100 px-4 lg:px-8 py-4 flex items-center justify-between">
@@ -39,20 +41,31 @@ export default function Topbar({ onMenuClick, user }: TopbarProps) {
       </div>
 
       <div className="flex items-center gap-3 lg:gap-6">
-        <Link to="/notifications" className="relative p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors">
-          <Bell className="w-5 h-5" />
-          <span className="absolute top-2 right-2 w-2 h-2 bg-yellow-400 rounded-full border-2 border-white"></span>
-        </Link>
-        
-        <Link to="/profile" className="flex items-center gap-3 pl-3 border-l border-gray-100 group">
-          <div className="hidden sm:flex flex-col items-end">
-            <span className="text-sm font-bold text-gray-900 group-hover:text-yellow-500 transition-colors">{user || 'Admin'}</span>
-            <span className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">Super Admin</span>
-          </div>
-          <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-yellow-400 font-bold group-hover:scale-105 transition-transform">
-            {user?.[0].toUpperCase() || 'A'}
-          </div>
-        </Link>
+        {isAuthenticated ? (
+          <>
+            <Link to="/notifications" className="relative p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors">
+              <Bell className="w-5 h-5" />
+              <span className="absolute top-2 right-2 w-2 h-2 bg-yellow-400 rounded-full border-2 border-white"></span>
+            </Link>
+            
+            <Link to="/profile" className="flex items-center gap-3 pl-3 border-l border-gray-100 group">
+              <div className="hidden sm:flex flex-col items-end">
+                <span className="text-sm font-bold text-gray-900 group-hover:text-yellow-500 transition-colors">{user || 'Admin'}</span>
+                <span className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">Super Admin</span>
+              </div>
+              <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-yellow-400 font-bold group-hover:scale-105 transition-transform">
+                {user?.[0].toUpperCase() || 'A'}
+              </div>
+            </Link>
+          </>
+        ) : (
+          <Link 
+            to="/login" 
+            className="flex items-center gap-2 px-4 py-2 bg-yellow-400 text-black rounded-xl text-sm font-bold hover:bg-yellow-300 transition-all shadow-sm"
+          >
+            <LogIn className="w-4 h-4" /> Login
+          </Link>
+        )}
       </div>
     </header>
   );

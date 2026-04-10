@@ -20,10 +20,9 @@ export default function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            
             <Route element={<Layout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/add-file" element={<AddFile />} />
               <Route path="/track-file" element={<TrackFile />} />

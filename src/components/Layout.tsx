@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet, Navigate } from 'react-router-dom';
+import { Outlet, Navigate, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Topbar from './Topbar';
 import { useAuth } from '../hooks/useAuth';
@@ -8,34 +8,51 @@ import { cn } from '../lib/utils';
 
 export default function Layout() {
   const { isAuthenticated, user, logout } = useAuth();
+  const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 1024);
 
-  if (!isAuthenticated) {
+  const isPublicPage = ['/', '/login'].includes(location.pathname);
+  const isLoginPage = location.pathname === '/login';
+
+  if (!isAuthenticated && !isPublicPage) {
     return <Navigate to="/login" replace />;
   }
 
+  // If it's the login page, we might want a simpler layout, 
+  // but the user asked for "constant for all", so we'll keep the structure 
+  // but maybe hide the sidebar specifically for login if it's too much.
+  // For now, let's keep it consistent as requested.
+
   return (
     <div className="min-h-screen bg-gray-50 flex overflow-x-hidden">
-      <Sidebar 
-        isOpen={isSidebarOpen} 
-        setIsOpen={setIsSidebarOpen} 
-        onLogout={logout} 
-      />
+      {!isLoginPage && (
+        <Sidebar 
+          isOpen={isSidebarOpen} 
+          setIsOpen={setIsSidebarOpen} 
+          onLogout={logout} 
+        />
+      )}
       
       <main className={cn(
         "flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out",
-        isSidebarOpen ? "lg:pl-64" : "lg:pl-20"
+        !isLoginPage && (isSidebarOpen ? "lg:pl-64" : "lg:pl-20")
       )}>
-        <Topbar 
-          onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} 
-          user={user} 
-        />
+        {!isLoginPage && (
+          <Topbar 
+            onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} 
+            user={user} 
+          />
+        )}
         
-        <div className="flex-1 p-4 lg:p-8">
+        <div className={cn(
+          "flex-1",
+          !isLoginPage && "p-4 lg:p-8"
+        )}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
+            className="h-full"
           >
             <Outlet />
           </motion.div>

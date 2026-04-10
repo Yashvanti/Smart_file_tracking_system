@@ -61,24 +61,7 @@ export default function Home() {
       </div>
 
       <div className="relative z-10">
-        {!isAuthenticated && (
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="bg-yellow-400 p-2 rounded-lg shadow-sm">
-              <FileText className="text-black w-6 h-6" />
-            </div>
-            <span className="font-black text-xl tracking-tight text-black">SMART TRACK</span>
-          </div>
-          <Link 
-            to="/login" 
-            className="bg-yellow-400 text-black px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-yellow-300 transition-all flex items-center gap-2 shadow-sm"
-          >
-            <LogIn className="w-4 h-4" /> Login
-          </Link>
-        </nav>
-      )}
-
-      <div className={cn("max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20", !isAuthenticated ? "pt-12" : "pt-20")}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 pt-12">
         {/* Hero Section */}
         <section className="text-center space-y-8 mb-24">
           <motion.div 
