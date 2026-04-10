@@ -1,16 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, FileText, QrCode, History, User, Building2, Tag, Clock, Save } from 'lucide-react';
 import { storage } from '../lib/storage';
 import { FileRecord, FileStatus, HistoryEntry } from '../types';
 import { formatDate, formatTime, cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
+import { useSearchParams } from 'react-router-dom';
 import Toast, { ToastType } from '../components/Toast';
 
 export default function TrackFile() {
-  const [searchId, setSearchId] = useState('');
+  const [searchParams] = useSearchParams();
+  const [searchId, setSearchId] = useState(searchParams.get('id') || '');
   const [file, setFile] = useState<FileRecord | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
+
+  useEffect(() => {
+    const id = searchParams.get('id');
+    if (id) {
+      const files = storage.getFiles();
+      const found = files.find(f => f.id.toLowerCase() === id.toLowerCase());
+      if (found) {
+        setFile(found);
+      }
+    }
+  }, [searchParams]);
 
   const handleSearch = (e?: React.FormEvent) => {
     e?.preventDefault();

@@ -6,7 +6,8 @@ import {
   FileText,
   ChevronLeft,
   ChevronRight,
-  Filter
+  Filter,
+  History
 } from 'lucide-react';
 import { HistoryEntry } from '../types';
 import { formatDate, formatTime, cn } from '../lib/utils';

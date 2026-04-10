@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { useFiles } from '../hooks/useFiles';
 import DashboardCharts from '../components/DashboardCharts';
+import FileStatusList from '../components/FileStatusList';
 import { motion } from 'motion/react';
 import SEO from '../components/SEO';
 
@@ -58,6 +59,15 @@ export default function Dashboard() {
 
       {/* Charts Section */}
       <DashboardCharts files={files} />
+
+      {/* Recent File Status Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6 }}
+      >
+        <FileStatusList files={files} />
+      </motion.div>
     </div>
   );
 }
