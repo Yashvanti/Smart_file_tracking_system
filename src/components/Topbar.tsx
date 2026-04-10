@@ -15,7 +15,7 @@ export default function Topbar({ onMenuClick, user }: TopbarProps) {
   const { isAuthenticated } = useAuth();
 
   return (
-    <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-bottom border-gray-100 px-4 lg:px-8 py-4 flex items-center justify-between">
+    <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-gray-100 px-4 lg:px-8 py-4 flex items-center justify-between shadow-sm">
       <div className="flex items-center gap-4">
         <button 
           onClick={onMenuClick}

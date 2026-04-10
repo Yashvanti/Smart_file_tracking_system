@@ -11,20 +11,14 @@ export default function Layout() {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 1024);
 
-  const isPublicPage = ['/', '/login'].includes(location.pathname);
   const isLoginPage = location.pathname === '/login';
 
-  if (!isAuthenticated && !isPublicPage) {
+  if (!isAuthenticated && !isLoginPage) {
     return <Navigate to="/login" replace />;
   }
 
-  // If it's the login page, we might want a simpler layout, 
-  // but the user asked for "constant for all", so we'll keep the structure 
-  // but maybe hide the sidebar specifically for login if it's too much.
-  // For now, let's keep it consistent as requested.
-
   return (
-    <div className="min-h-screen bg-gray-50 flex overflow-x-hidden">
+    <div className="h-screen bg-gray-50 flex overflow-hidden">
       {!isLoginPage && (
         <Sidebar 
           isOpen={isSidebarOpen} 
@@ -33,7 +27,7 @@ export default function Layout() {
         />
       )}
       
-      <main className={cn(
+      <div className={cn(
         "flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out",
         !isLoginPage && (isSidebarOpen ? "lg:pl-64" : "lg:pl-20")
       )}>
@@ -44,8 +38,8 @@ export default function Layout() {
           />
         )}
         
-        <div className={cn(
-          "flex-1",
+        <main className={cn(
+          "flex-1 overflow-y-auto",
           !isLoginPage && "p-4 lg:p-8"
         )}>
           <motion.div
@@ -56,8 +50,11 @@ export default function Layout() {
           >
             <Outlet />
           </motion.div>
-        </div>
-      </main>
+          
+          {/* Bottom padding to ensure content isn't cut off */}
+          <div className="h-8" />
+        </main>
+      </div>
     </div>
   );
 }
