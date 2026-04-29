@@ -35,19 +35,19 @@ export default function Home() {
       id: 'detailed',
       title: "Detailed ER Diagram",
       desc: "Complete entity relationship mapping with primary and foreign keys.",
-      image: "/input_file_0.png",
+      image: "/images/er1.jpeg", 
     },
     {
       id: 'crows-foot',
-      title: "Crow's Foot Notation",
+      title: "ER Diagram (Crow's Foot)",
       desc: "Standardized relational structure showing cardinality and constraints.",
-      image: "/input_file_1.png",
+      image: "/images/er2.jpeg", 
     },
     {
       id: 'simplified',
-      title: "Simplified Overview",
+      title: "ER Diagram (Simplified)",
       desc: "High-level conceptual flow of the file tracking lifecycle.",
-      image: "/input_file_2.png",
+      image: "/images/er3.jpeg", 
     }
   ];
 
@@ -57,56 +57,56 @@ export default function Home() {
       title: "Admin Login",
       desc: "Secure login to access the tracking system",
       color: "bg-black text-white",
-      image: "/input_file_1.png"
+      image: "/images/step1.png"
     },
     {
       icon: PlusCircle,
       title: "Add New File",
       desc: "Add file details and create record",
       color: "bg-yellow-400 text-black",
-      image: "/input_file_0.png"
+      image: "/images/step2.png"
     },
     {
       icon: QrCode,
       title: "QR Code Generation",
       desc: "Automatic unique QR code generation",
       color: "bg-black text-white",
-      image: "/input_file_4.png"
+      image: "/images/step3.png"
     },
     {
       icon: Search,
       title: "Track File",
       desc: "Search and track file status live",
       color: "bg-yellow-400 text-black",
-      image: "/input_file_6.png"
+      image: "/images/step4.png"
     },
     {
       icon: Smartphone,
       title: "Scan QR",
       desc: "Scan QR code using device camera",
       color: "bg-black text-white",
-      image: "/input_file_5.png"
+      image: "/images/step5.png"
     },
     {
       icon: Eye,
       title: "View File Details",
       desc: "View complete file history instantly",
       color: "bg-yellow-400 text-black",
-      image: "/input_file_2.png"
+      image: "/images/step6.png"
     },
     {
       icon: RefreshCw,
       title: "Update Status",
       desc: "Modify current file stage and remarks",
       color: "bg-black text-white",
-      image: "/input_file_7.png"
+      image: "/images/step7.png"
     },
     {
       icon: History,
       title: "File History & Reports",
       desc: "View movement logs and export data",
       color: "bg-yellow-400 text-black",
-      image: "/input_file_3.png"
+      image: "/images/step8.png"
     }
   ];
   
@@ -292,14 +292,16 @@ export default function Home() {
                     </div>
 
                     {/* Step Image */}
-                    <div className="w-full h-56 overflow-hidden relative bg-gray-50">
+                    <div className="w-full h-64 overflow-hidden relative bg-white flex items-center justify-center p-4">
                       <img 
                         src={step.image} 
                         alt={step.title}
-                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-90 group-hover:opacity-100"
-                        referrerPolicy="no-referrer"
+                        className="max-w-full max-h-full object-contain transition-transform duration-1000 group-hover:scale-105"
+                        loading="lazy"
+                        onLoad={(e) => (e.currentTarget.style.opacity = '1')}
+                        style={{ opacity: 0, transition: 'opacity 0.5s' }}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent" />
+                      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white to-transparent" />
                     </div>
 
                     <div className="p-8 pt-0 flex flex-col items-center text-center relative">
@@ -385,20 +387,20 @@ export default function Home() {
                 className="group relative bg-white border border-gray-100 rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 cursor-zoom-in"
                 onClick={() => setSelectedDiagram(diagram.image)}
               >
-                <div className="aspect-[4/3] relative overflow-hidden bg-gray-50">
+                <div className="aspect-[4/3] relative overflow-hidden bg-white flex items-center justify-center p-6">
                   <img 
                     src={diagram.image} 
                     alt={diagram.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    referrerPolicy="no-referrer"
+                    className="max-w-full max-h-full object-contain transition-transform duration-700 group-hover:scale-105"
+                    loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500 flex items-center justify-center">
                     <div className="bg-yellow-400 p-4 rounded-2xl text-black shadow-xl scale-0 group-hover:scale-100 transition-all duration-500 rotate-12 group-hover:rotate-0">
                       <Maximize2 className="w-6 h-6" />
                     </div>
                   </div>
                 </div>
-                <div className="p-8">
+                <div className="p-8 border-t border-gray-50">
                   <h3 className="text-xl font-black text-[#0F172A] mb-2">{diagram.title}</h3>
                   <p className="text-gray-500 text-sm font-medium leading-relaxed">
                     {diagram.desc}
@@ -431,7 +433,7 @@ export default function Home() {
                 src={selectedDiagram} 
                 alt="Diagram Preview"
                 className="w-full h-full object-contain p-4 lg:p-8"
-                referrerPolicy="no-referrer"
+                loading="eager"
               />
               <button 
                 onClick={() => setSelectedDiagram(null)}
